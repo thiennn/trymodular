@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Modular.ModuleA.Controllers
+namespace Modular.ModuleB.Controllers
 {
-    public class TestController : Controller
+    public class TestBController : Controller
     {
         public IActionResult Index()
         {

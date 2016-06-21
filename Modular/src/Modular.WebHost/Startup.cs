@@ -16,13 +16,18 @@ using System.Reflection;
 using System.Runtime.Loader;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Modular.WebHost.Extensions;
+using System.IO;
 
 namespace Modular.WebHost
 {
     public class Startup
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
+
         public Startup(IHostingEnvironment env)
         {
+            _hostingEnvironment = env;
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -56,8 +61,22 @@ namespace Modular.WebHost
                 options.ViewLocationExpanders.Add(new ModuleViewLocationExpander());
             });
 
-            services.AddMvc()
-                .AddApplicationPart(AssemblyLoadContext.Default.LoadFromAssemblyPath(@"C:\Users\thiennguyenq\Documents\trymodular\Modular\src\Modular.WebHost\Modules\Modular.ModuleA\bin\Debug\netstandard1.5\Modular.ModuleA.dll"));
+            var mvcBuilder = services.AddMvc();
+
+            var moduleRootFolder = _hostingEnvironment.ContentRootFileProvider.GetDirectoryContents("/Modules");
+            foreach(var moduleFolder in moduleRootFolder.Where(x => x.IsDirectory))
+            {
+                var binFolder = new DirectoryInfo(Path.Combine(moduleFolder.PhysicalPath, "bin"));
+                if (!binFolder.Exists)
+                {
+                    continue;
+                }
+
+                foreach(var file in binFolder.GetFileSystemInfos("*.dll", SearchOption.AllDirectories))
+                {
+                    mvcBuilder.AddApplicationPart(AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName));
+                }
+            }
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
