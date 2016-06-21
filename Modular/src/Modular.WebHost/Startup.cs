@@ -72,9 +72,13 @@ namespace Modular.WebHost
                     continue;
                 }
 
-                foreach(var file in binFolder.GetFileSystemInfos("Modular.Modules.*.dll", SearchOption.AllDirectories))
+                foreach(var file in binFolder.GetFileSystemInfos("*.dll", SearchOption.AllDirectories))
                 {
-                    moduleAssemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName));
+                    try
+                    {
+                        moduleAssemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName));
+                    }
+                    catch { }
                 }
             }
 
