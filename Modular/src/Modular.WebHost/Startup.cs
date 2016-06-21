@@ -14,6 +14,8 @@ using Modular.WebHost.Models;
 using Modular.WebHost.Services;
 using System.Reflection;
 using System.Runtime.Loader;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Modular.WebHost.Extensions;
 
 namespace Modular.WebHost
 {
@@ -48,6 +50,11 @@ namespace Modular.WebHost
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                options.ViewLocationExpanders.Add(new ModuleViewLocationExpander());
+            });
 
             services.AddMvc()
                 .AddApplicationPart(AssemblyLoadContext.Default.LoadFromAssemblyPath(@"C:\Users\thiennguyenq\Documents\trymodular\Modular\src\Modular.WebHost\Modules\Modular.ModuleA\bin\Debug\netstandard1.5\Modular.ModuleA.dll"));

@@ -82,7 +82,23 @@
 
   "buildOptions": {
     "emitEntryPoint": true,
-    "preserveCompilationContext": true
+    "preserveCompilationContext": true,
+    "copyToOutput": {
+      "include": [
+        "Views",
+        "web.config"
+      ]
+    },
+    "compile": {
+      "exclude": [
+        "wwwroot",
+        "node_modules",
+        "App_Data",
+        "Core",
+        "Modules",
+        "Themes"
+      ]
+    }
   },
 
   "runtimeOptions": {
