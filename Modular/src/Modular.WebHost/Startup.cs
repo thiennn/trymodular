@@ -17,6 +17,7 @@ using System.Runtime.Loader;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Modular.WebHost.Extensions;
 using System.IO;
+using Modular.Core;
 
 namespace Modular.WebHost
 {
@@ -61,9 +62,8 @@ namespace Modular.WebHost
                 options.ViewLocationExpanders.Add(new ModuleViewLocationExpander());
             });
 
-            var mvcBuilder = services.AddMvc();
-
             var moduleRootFolder = _hostingEnvironment.ContentRootFileProvider.GetDirectoryContents("/Modules");
+            var moduleAssemblies = new List<Assembly>();
             foreach(var moduleFolder in moduleRootFolder.Where(x => x.IsDirectory))
             {
                 var binFolder = new DirectoryInfo(Path.Combine(moduleFolder.PhysicalPath, "bin"));
@@ -74,7 +74,23 @@ namespace Modular.WebHost
 
                 foreach(var file in binFolder.GetFileSystemInfos("Modular.Modules.*.dll", SearchOption.AllDirectories))
                 {
-                    mvcBuilder.AddApplicationPart(AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName));
+                    moduleAssemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName));
+                }
+            }
+
+            var mvcBuilder = services.AddMvc();
+            var moduleInitializerInterface = typeof(IModuleInitializer);
+            foreach(var assembly in moduleAssemblies)
+            {
+                // Register controller from modules
+                mvcBuilder.AddApplicationPart(assembly);
+
+                // Register dependency in modules
+                var moduleInitializerType = assembly.GetTypes().Where(x => typeof(IModuleInitializer).IsAssignableFrom(x)).FirstOrDefault();
+                if(moduleInitializerType != null)
+                {
+                    var moduleInitializer = (IModuleInitializer)Activator.CreateInstance(moduleInitializerType);
+                    moduleInitializer.Init(services);
                 }
             }
 
