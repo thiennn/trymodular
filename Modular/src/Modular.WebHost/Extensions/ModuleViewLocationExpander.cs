@@ -19,8 +19,8 @@ namespace Modular.WebHost.Extensions
                 {
                     var moduleViewLocations = new string[]
                     {
-                    "/Modules/Modular." + module + "/Views/{1}/{0}.cshtml",
-                    "/Modules/Modular." + module + "/Views/Shared/{0}.cshtml"
+                    "/Modules/Modular.Modules." + module + "/Views/{1}/{0}.cshtml",
+                    "/Modules/Modular.Modules." + module + "/Views/Shared/{0}.cshtml"
                     };
 
                     viewLocations = moduleViewLocations.Concat(viewLocations);
@@ -32,7 +32,7 @@ namespace Modular.WebHost.Extensions
         public void PopulateValues(ViewLocationExpanderContext context)
         {
             var controller = context.ActionContext.ActionDescriptor.DisplayName;
-            var moduleName = controller.Split('.')[1];
+            var moduleName = controller.Split('.')[2];
             if(moduleName != "WebHost")
             {
                 context.Values[_moduleKey] = moduleName;

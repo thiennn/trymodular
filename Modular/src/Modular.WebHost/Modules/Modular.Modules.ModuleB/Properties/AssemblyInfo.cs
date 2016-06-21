@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Modular.ModuleB")]
+[assembly: AssemblyProduct("Modular.Modules.ModuleB")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -16,4 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("821efbca-9b63-4e64-8325-b33d9b6beecb")]
+[assembly: Guid("ce294e9d-9f20-400f-8051-e6a98ab76c71")]
