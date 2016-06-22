@@ -18,12 +18,15 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Modular.WebHost.Extensions;
 using System.IO;
 using Modular.Core;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Http;
 
 namespace Modular.WebHost
 {
     public class Startup
     {
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IList<ModuleInfo> modules = new List<ModuleInfo>();
 
         public Startup(IHostingEnvironment env)
         {
@@ -66,6 +69,8 @@ namespace Modular.WebHost
             var moduleAssemblies = new List<Assembly>();
             foreach(var moduleFolder in moduleRootFolder.Where(x => x.IsDirectory))
             {
+                modules.Add(new ModuleInfo { Name = moduleFolder.Name, Path = moduleFolder.PhysicalPath });
+
                 var binFolder = new DirectoryInfo(Path.Combine(moduleFolder.PhysicalPath, "bin"));
                 if (!binFolder.Exists)
                 {
@@ -123,6 +128,20 @@ namespace Modular.WebHost
 
             app.UseStaticFiles();
 
+            foreach(var module in modules)
+            {
+                var wwwrootDir = new DirectoryInfo(Path.Combine(module.Path, "wwwroot"));
+                if (!wwwrootDir.Exists)
+                {
+                    continue;
+                }
+                app.UseStaticFiles(new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(wwwrootDir.FullName),
+                    RequestPath = new PathString("/"+ module.SortName)
+                });
+            }
+
             app.UseIdentity();
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
@@ -134,5 +153,20 @@ namespace Modular.WebHost
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+    }
+
+    public class ModuleInfo
+    {
+        public string Name { get; set; }
+
+        public string SortName
+        {
+            get
+            {
+                return Name.Split('.').Last();
+            }
+        }
+
+        public string Path { get; set; }
     }
 }
