@@ -77,9 +77,14 @@ namespace Modular.WebHost
                     continue;
                 }
 
-                foreach(var file in binFolder.GetFileSystemInfos("Modular.Modules.*.dll", SearchOption.AllDirectories))
+                foreach(var file in binFolder.GetFileSystemInfos("*.dll", SearchOption.AllDirectories))
                 {
-                    moduleAssemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName));
+                    // If the assemblies are referenced by the Host, then this will throw exception
+                    try
+                    {
+                        moduleAssemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName));
+                    }
+                    catch { }
                 }
             }
 

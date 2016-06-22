@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using ExtraDepenencyTest;
+using Microsoft.Extensions.DependencyInjection;
 using Modular.Core;
 using Modular.Modules.ModuleA.Services;
 using System;
@@ -12,7 +13,9 @@ namespace Modular.Modules.ModuleA
     {
         public void Init(IServiceCollection services)
         {
+            services.AddTransient<IAnotherTestService, AnotherTestService>();
             services.AddTransient<ITestService, TestService>();
+
         }
     }
 }
