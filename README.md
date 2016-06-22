@@ -9,6 +9,7 @@ I am looking for a solution to modularize my simple commerce http://www.simplcom
 Some of them are not completed or too complicated for me. Struggling for a while, finally I can make it work. To be honest, I not sure this is best solution and I am looking for comments
 
 There are some problems we need to address to make our application modularized:
+
 1.	How can MVC find out our controllers when they are in other class libraries and in other folder
 2.	How can the ViewEngine can pick up the right location for the Views
 3.	How to register services used in modules
