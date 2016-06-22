@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -10,8 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Modular.WebHost.Data;
-using Modular.WebHost.Models;
-using Modular.WebHost.Services;
 using System.Reflection;
 using System.Runtime.Loader;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -20,6 +17,8 @@ using System.IO;
 using Modular.Core;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http;
+using Modular.Modules.Core.Models;
+using Modular.Modules.Core.Services;
 
 namespace Modular.WebHost
 {
@@ -128,6 +127,7 @@ namespace Modular.WebHost
 
             app.UseStaticFiles();
 
+            // Serving static file for modules
             foreach(var module in modules)
             {
                 var wwwrootDir = new DirectoryInfo(Path.Combine(module.Path, "wwwroot"));
@@ -135,6 +135,7 @@ namespace Modular.WebHost
                 {
                     continue;
                 }
+
                 app.UseStaticFiles(new StaticFileOptions()
                 {
                     FileProvider = new PhysicalFileProvider(wwwrootDir.FullName),
@@ -153,20 +154,5 @@ namespace Modular.WebHost
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
-    }
-
-    public class ModuleInfo
-    {
-        public string Name { get; set; }
-
-        public string SortName
-        {
-            get
-            {
-                return Name.Split('.').Last();
-            }
-        }
-
-        public string Path { get; set; }
     }
 }

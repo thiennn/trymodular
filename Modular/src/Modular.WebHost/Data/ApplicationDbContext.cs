@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Modular.WebHost.Models;
+using Modular.Modules.Core.Models;
 
 namespace Modular.WebHost.Data
 {

@@ -38,7 +38,8 @@
       "version": "1.0.0-preview1-final",
       "type": "build"
     },
-    "Modular.Core": "1.0.0-*"
+    "Modular.Core": "1.0.0-*",
+    "Modular.Modules.Core": "1.0.0-*"
   },
 
   "tools": {
