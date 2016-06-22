@@ -74,6 +74,7 @@ namespace Modular.WebHost
 
                 foreach(var file in binFolder.GetFileSystemInfos("*.dll", SearchOption.AllDirectories))
                 {
+                    // If the assemblies are referenced by the Host, then this will throw exception
                     try
                     {
                         moduleAssemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName));
