@@ -52,39 +52,39 @@ In the Startup.cs, we scan all the *.dll in each module and load them ups
 
 1. Assemblies then will be added to MVC by ApplicationPart
 
-```cs
+    ```cs
           var mvcBuilder = services.AddMvc();
           foreach(var assembly in moduleAssemblies)
           {
               // Register controller from modules
               mvcBuilder.AddApplicationPart(assembly);
           }
-```
-
+    ```
+    
 2. ModuleViewLocationExpander is used to help the view engine lookup up the right module folder the views
 
-```cs
+   ```cs
          services.Configure<RazorViewEngineOptions>(options =>
             {
                 options.ViewLocationExpanders.Add(new ModuleViewLocationExpander());
             });
-```
-            
+    ```
+
 3. Each module contains an ModuleInitializer.cs where services for that module is registered.
 
-```cs
-     // Register dependency in modules
-      var moduleInitializerType = assembly.GetTypes().Where(x => typeof(IModuleInitializer).IsAssignableFrom(x)).FirstOrDefault();
-      if(moduleInitializerType != null)
-      {
-          var moduleInitializer = (IModuleInitializer)Activator.CreateInstance(moduleInitializerType);
-          moduleInitializer.Init(services);
-      }
-```
+    ```cs
+         // Register dependency in modules
+          var moduleInitializerType = assembly.GetTypes().Where(x => typeof(IModuleInitializer).IsAssignableFrom(x)).FirstOrDefault();
+          if(moduleInitializerType != null)
+          {
+              var moduleInitializer = (IModuleInitializer)Activator.CreateInstance(moduleInitializerType);
+              moduleInitializer.Init(services);
+          }
+    ```
 
 4. And this is how I serve static files for modules
 
-```cs
+    ```cs
       // Serving static file for modules
       foreach(var module in modules)
       {
@@ -100,4 +100,4 @@ In the Startup.cs, we scan all the *.dll in each module and load them ups
               RequestPath = new PathString("/"+ module.SortName)
           });
       }
-```
+    ```
