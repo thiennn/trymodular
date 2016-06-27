@@ -19,11 +19,11 @@ Below is general folder structure I have come up with
 
 ![](https://github.com/thiennn/trymodular/blob/master/folder-structure.png)
 
-The Modular.WebHost is the hosting project. It will bootstrap the app and load all the modules it found in Modules folder. Each module contains all the stuff for itself to run including Controllers, Services, Views and event static file.
-For easy development, in the visual studio solution I create a Modules solution items and add module projects in Modular.WebHost/Modules phycial folder.
+The Modular.WebHost is the hosting project. It will bootstrap the app and load all the modules it found in Modules folder. Each module contains all the stuff for itself to run including Controllers, Services, Views and event static files.
+For easy development, in the visual studio solution I create a "Modules" solution items and add module projects in Modular.WebHost/Modules phycial folder.
 To prevent Modular.WebHost to compile stuff in Modules folder, we need to exclude them in the project.json.
 
-In the Startup.cs, we scan all the *.dll in each module and load them ups
+In the Startup.cs, we scan all the *.dll in each module and load them up
 
 ```cs
     var moduleRootFolder = _hostingEnvironment.ContentRootFileProvider.GetDirectoryContents("/Modules");
