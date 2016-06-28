@@ -96,7 +96,7 @@ namespace Modular.WebHost
 
                 // Register dependency in modules
                 var moduleInitializerType = assembly.GetTypes().Where(x => typeof(IModuleInitializer).IsAssignableFrom(x)).FirstOrDefault();
-                if(moduleInitializerType != null)
+                if(moduleInitializerType != null && moduleInitializerType != typeof(IModuleInitializer))
                 {
                     var moduleInitializer = (IModuleInitializer)Activator.CreateInstance(moduleInitializerType);
                     moduleInitializer.Init(services);
