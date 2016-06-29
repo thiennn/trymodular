@@ -65,11 +65,8 @@ namespace Modular.WebHost
             });
 
             var moduleRootFolder = _hostingEnvironment.ContentRootFileProvider.GetDirectoryContents("/Modules");
-            var moduleAssemblies = new List<Assembly>();
             foreach(var moduleFolder in moduleRootFolder.Where(x => x.IsDirectory))
             {
-                modules.Add(new ModuleInfo { Name = moduleFolder.Name, Path = moduleFolder.PhysicalPath });
-
                 var binFolder = new DirectoryInfo(Path.Combine(moduleFolder.PhysicalPath, "bin"));
                 if (!binFolder.Exists)
                 {
@@ -78,24 +75,37 @@ namespace Modular.WebHost
 
                 foreach(var file in binFolder.GetFileSystemInfos("*.dll", SearchOption.AllDirectories))
                 {
-                    // If the assemblies are referenced by the Host, then this will throw exception
+                    Assembly assembly;
                     try
                     {
-                        moduleAssemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName));
+                        assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName);
                     }
-                    catch { }
+                    catch(FileLoadException ex)
+                    {
+                        if (ex.Message == "Assembly with same name is already loaded")
+                        {
+                            continue;
+                        }
+                        throw;
+                    }
+                    
+
+                    if (assembly.FullName.Contains(moduleFolder.Name))
+                    {
+                        modules.Add(new ModuleInfo { Name = moduleFolder.Name, Assembly = assembly, Path = moduleFolder.PhysicalPath });
+                    }
                 }
             }
 
             var mvcBuilder = services.AddMvc();
             var moduleInitializerInterface = typeof(IModuleInitializer);
-            foreach(var assembly in moduleAssemblies)
+            foreach(var module in modules)
             {
                 // Register controller from modules
-                mvcBuilder.AddApplicationPart(assembly);
+                mvcBuilder.AddApplicationPart(module.Assembly);
 
                 // Register dependency in modules
-                var moduleInitializerType = assembly.GetTypes().Where(x => typeof(IModuleInitializer).IsAssignableFrom(x)).FirstOrDefault();
+                var moduleInitializerType = module.Assembly.GetTypes().Where(x => typeof(IModuleInitializer).IsAssignableFrom(x)).FirstOrDefault();
                 if(moduleInitializerType != null && moduleInitializerType != typeof(IModuleInitializer))
                 {
                     var moduleInitializer = (IModuleInitializer)Activator.CreateInstance(moduleInitializerType);
