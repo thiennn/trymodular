@@ -8,8 +8,8 @@ using Modular.Modules.Core.Infrastructure;
 namespace Modular.WebHost.Migrations
 {
     [DbContext(typeof(ModularDbContext))]
-    [Migration("20160705073643_InitialSchema")]
-    partial class InitialSchema
+    [Migration("20160705081008_AddSampleSchema")]
+    partial class AddSampleSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -185,6 +185,10 @@ namespace Modular.WebHost.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Name");
+
                     b.HasKey("Id");
 
                     b.ToTable("ModuleA_Sample");
@@ -194,6 +198,8 @@ namespace Modular.WebHost.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
 
                     b.HasKey("Id");
 

@@ -26,13 +26,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-controller="Home" asp-action="Index" class="navbar-brand">Modular.Modules.Core</a>
+                <a asp-controller="Home" asp-action="Index" class="navbar-brand">Modular Sample</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-controller="TestA" asp-action="Index">Test Module A</a></li>
+                    <li><a asp-controller="TestB" asp-action="Index">Test Module B</a></li>
+                    <li><a href="/ModuleA/logo.png" target="_blank">Static content from module A</a></li>
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>

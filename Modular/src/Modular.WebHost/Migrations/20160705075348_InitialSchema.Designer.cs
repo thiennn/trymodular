@@ -8,9 +8,10 @@ using Modular.Modules.Core.Infrastructure;
 namespace Modular.WebHost.Migrations
 {
     [DbContext(typeof(ModularDbContext))]
-    partial class ModularDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160705075348_InitialSchema")]
+    partial class InitialSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -183,10 +184,6 @@ namespace Modular.WebHost.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Name");
 
                     b.HasKey("Id");
 
