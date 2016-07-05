@@ -137,8 +137,6 @@ namespace Modular.WebHost
 
             app.UseIdentity();
 
-            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -162,7 +160,7 @@ namespace Modular.WebHost
 
                 foreach (var file in binFolder.GetFileSystemInfos("*.dll", SearchOption.AllDirectories))
                 {
-                    Assembly assembly;
+                    Assembly assembly = null;
                     try
                     {
                          assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName);
@@ -171,9 +169,13 @@ namespace Modular.WebHost
                     {
                         if (ex.Message == "Assembly with same name is already loaded")
                         {
-                            continue;
+                            // Get loaded assembly
+                             assembly = Assembly.Load(new AssemblyName(Path.GetFileNameWithoutExtension(file.Name)));
                         }
-                        throw;
+                        else
+                        {
+                            throw;
+                        }
                     }
 
                     if (assembly.FullName.Contains(moduleFolder.Name))

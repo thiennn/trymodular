@@ -30,39 +30,7 @@ namespace Modular.Modules.Core.Infrastructure
 
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>()
-                .ToTable("Core_User");
-
-            modelBuilder.Entity<Role>()
-                .ToTable("Core_Role");
-
-            modelBuilder.Entity<IdentityUserClaim<long>>(b =>
-            {
-                b.HasKey(uc => uc.Id);
-                b.ToTable("Core_UserClaim");
-            });
-
-            modelBuilder.Entity<IdentityRoleClaim<long>>(b =>
-            {
-                b.HasKey(rc => rc.Id);
-                b.ToTable("Core_RoleClaim");
-            });
-
-            modelBuilder.Entity<IdentityUserRole<long>>(b =>
-            {
-                b.HasKey(r => new { r.UserId, r.RoleId });
-                b.ToTable("Core_UserRole");
-            });
-
-            modelBuilder.Entity<IdentityUserLogin<long>>(b =>
-            {
-                b.ToTable("Core_UserLogin");
-            });
-
-            modelBuilder.Entity<IdentityUserToken<long>>(b =>
-            {
-                b.ToTable("Core_UserToken");
-            });
+            RegisterCustomMappings(modelBuilder, typeToRegisters);
         }
 
         private static void RegiserConvention(ModelBuilder modelBuilder)
@@ -85,6 +53,21 @@ namespace Modular.Modules.Core.Infrastructure
             {
                 modelBuilder.Entity(type);
             }
+        }
+
+        private static void RegisterCustomMappings(ModelBuilder modelBuilder, IEnumerable<Type> typeToRegisters)
+        {
+
+            var customModelBuilderTypes = typeToRegisters.Where(x => typeof(ICustomModelBuilder).IsAssignableFrom(x));
+            foreach(var builderType in customModelBuilderTypes)
+            {
+                if (builderType != null && builderType != typeof(ICustomModelBuilder))
+                {
+                    var builder = (ICustomModelBuilder)Activator.CreateInstance(builderType);
+                    builder.Build(modelBuilder);
+                }
+            }
+            
         }
     }
 }
