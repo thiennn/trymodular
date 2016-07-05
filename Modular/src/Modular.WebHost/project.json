@@ -39,7 +39,8 @@
       "type": "build"
     },
     "Modular.Core": "1.0.0-*",
-    "Modular.Modules.Core": "1.0.0-*"
+    "Modular.Modules.Core": "1.0.0-*",
+    "Autofac.Extensions.DependencyInjection": "4.0.0-rc3-280"
   },
 
   "tools": {
