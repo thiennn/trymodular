@@ -99,6 +99,22 @@ namespace Modular.WebHost.Migrations
                     b.ToTable("Core_UserToken");
                 });
 
+            modelBuilder.Entity("Modular.Modules.Core.Models.Product", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Name");
+
+                    b.Property<decimal>("Price");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Core_Product");
+                });
+
             modelBuilder.Entity("Modular.Modules.Core.Models.Role", b =>
                 {
                     b.Property<long>("Id")
@@ -186,7 +202,8 @@ namespace Modular.WebHost.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnName("TestName");
 
                     b.HasKey("Id");
 

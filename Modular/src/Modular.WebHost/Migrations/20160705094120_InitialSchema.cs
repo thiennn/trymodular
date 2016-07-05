@@ -24,6 +24,21 @@ namespace Modular.WebHost.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Core_Product",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Description = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Price = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Core_Product", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Core_Role",
                 columns: table => new
                 {
@@ -73,7 +88,9 @@ namespace Modular.WebHost.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Description = table.Column<string>(nullable: true),
+                    TestName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -237,6 +254,9 @@ namespace Modular.WebHost.Migrations
 
             migrationBuilder.DropTable(
                 name: "Core_UserToken");
+
+            migrationBuilder.DropTable(
+                name: "Core_Product");
 
             migrationBuilder.DropTable(
                 name: "ModuleA_Sample");
