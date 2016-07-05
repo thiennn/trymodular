@@ -12,7 +12,7 @@ namespace Modular.Core
 
         public Assembly Assembly { get; set; }
 
-        public string SortName
+        public string ShortName
         {
             get
             {

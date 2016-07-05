@@ -149,7 +149,7 @@ namespace Modular.WebHost
                 app.UseStaticFiles(new StaticFileOptions()
                 {
                     FileProvider = new PhysicalFileProvider(wwwrootDir.FullName),
-                    RequestPath = new PathString("/"+ module.SortName)
+                    RequestPath = new PathString("/"+ module.ShortName)
                 });
             }
 
