@@ -21,6 +21,7 @@ using Autofac;
 using Modular.Core.Domain;
 using Autofac.Extensions.DependencyInjection;
 using Modular.WebHost.Modules.Modular.Modules.Core.Infrastructure;
+using Microsoft.CodeAnalysis;
 
 namespace Modular.WebHost
 {
@@ -68,7 +69,15 @@ namespace Modular.WebHost
                 options.ViewLocationExpanders.Add(new ModuleViewLocationExpander());
             });
 
-            var mvcBuilder = services.AddMvc();
+            var mvcBuilder = services.AddMvc()
+                .AddRazorOptions(o =>
+                {
+                    foreach (var module in modules)
+                    {
+                        o.AdditionalCompilationReferences.Add(MetadataReference.CreateFromFile(module.Assembly.Location));
+                    }
+                });
+
             var moduleInitializerInterface = typeof(IModuleInitializer);
             foreach (var module in modules)
             {
