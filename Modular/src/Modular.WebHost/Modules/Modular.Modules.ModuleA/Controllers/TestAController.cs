@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Modular.Core.Domain;
 using Modular.Modules.ModuleA.Models;
 using Modular.Modules.ModuleA.Services;
+using Modular.Modules.ModuleA.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,9 @@ namespace Modular.Modules.ModuleA.Controllers
             _sampleRepository.Add(sample);
             _sampleRepository.SaveChange();
 
-            return View();
+            var model = new TestViewModel { Name = sample.Name, Description = sample.Description };
+
+            return View(model);
         }
     }
 }

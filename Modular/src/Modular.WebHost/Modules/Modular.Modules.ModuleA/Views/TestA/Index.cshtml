@@ -1,5 +1,11 @@
-﻿<h1>Hello, I'm from module A</h1>
+﻿@model Modular.Modules.ModuleA.ViewModels.TestViewModel
+<h1>Hello, I'm from module A</h1>
 
 <h2>Test data: @ViewBag.TestData</h2>
 
 <h2>Another test: @ViewBag.AnotherTestData</h2>
+
+<h2>Strong type view</h2>
+<p>@Model.Name</p>
+<p>@Model.Description</p>
+<p>@Model.Test</p>
